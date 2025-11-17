@@ -1,0 +1,52 @@
+name: domjudge
+services:
+  dom-mariadb:
+    image: mariadb:11.8.4
+    container_name: dom-mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: MARIAdbPASS2025FUN
+      MYSQL_USER: domjudge
+      MYSQL_PASSWORD: DomJudgeBuild2025FUN
+      MYSQL_DATABASE: domjudge
+      TZ: Asia/Shanghai
+    command:
+      - --max-connections=1000
+      - --max-allowed-packet=102400000
+      - --innodb-log-file-size=202400000
+  
+  dom-server:
+    image: domjudge/domserver:8.3.1
+    container_name: dom-server
+    restart: always
+    depends_on:
+      dom-mariadb:
+        condition: service_started
+    environment:
+      MYSQL_HOST: dom-mariadb
+      MYSQL_USER: domjudge
+      MYSQL_DATABASE: domjudge
+      MYSQL_PASSWORD: DomJudgeBuild2025FUN
+      MYSQL_ROOT_PASSWORD: MARIAdbPASS2025FUN
+      CONTAINER_TIMEZONE: Asia/Shanghai
+      TRUSTED_PROXIES: ""
+      WEBAPP_BASEURL: /
+    ports:
+      - "88:80"
+  
+  dom-judge:
+    image: domjudge/judgehost:8.3.1
+    container_name: dom-judge
+    restart: always
+    privileged: true
+    hostname: judgedaemon-0
+    depends_on:
+      dom-server:
+        condition: service_started
+    environment:
+      DAEMON_ID: "0"
+      JUDGEDAEMON_PASSWORD: ReplaceWithAPIKey
+      CONTAINER_TIMEZONE: Asia/Shanghai
+      DOMSERVER_BASEURL: http://dom-server
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
