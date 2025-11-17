@@ -49,4 +49,4 @@ services:
       CONTAINER_TIMEZONE: Asia/Shanghai
       DOMSERVER_BASEURL: http://dom-server
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup
