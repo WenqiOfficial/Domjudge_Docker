@@ -47,6 +47,6 @@ services:
       DAEMON_ID: "0"
       JUDGEDAEMON_PASSWORD: ReplaceWithAPIKey
       CONTAINER_TIMEZONE: Asia/Shanghai
-      DOMSERVER_BASEURL: http://dom-server
+      DOMSERVER_BASEURL: http://dom-server/
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
